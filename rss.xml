@@ -1,0 +1,77 @@
+<rss version="2.0">
+  <channel>
+    <title>dimden</title>
+    <link>https://dimden.dev/</link>
+    <description>I'm a cat</description>
+    <image>
+      <url>https://dimden.dev/logo.png</url>
+    </image>
+
+    <item>
+      <title>Optimizing rendering of 100,000+ HTML nodes</title>
+      <link>https://dimden.dev/blog/?id=13-optimizing-rendering-of-100k-html-nodes</link>
+      <pubDate>Thu, 4 Apr 2024 00:00:00 +0300</pubDate>
+      <guid>13</guid>
+    </item>
+    <item>
+      <title>Custom profile CSS in OldTwitter</title>
+      <link>https://dimden.dev/blog/?id=12-custom-profile-css-in-oldtwitter</link>
+      <pubDate>Sun, 30 Jul 2023 00:00:00 +0300</pubDate>
+      <guid>12</guid>
+    </item>
+    <item>
+      <title>Making Tetris in Twitter with Node.js</title>
+      <link>https://dimden.dev/blog/?id=10-making-tetris-twitter-bot-with-node-js</link>
+      <pubDate>Tue, 17 Aug 2021 00:00:00 +0300</pubDate>
+      <guid>10</guid>
+    </item>
+    <item>
+      <title>The Migration 2</title>
+      <link>https://dimden.dev/blog/?id=8-the-migration-2</link>
+      <pubDate>Wed, 26 Aug 2020 00:00:00 +0300</pubDate>
+      <guid>8</guid>
+    </item>
+    <item>
+      <title>The Utix Website</title>
+      <link>https://dimden.dev/blog/?id=7-utix-website</link>
+      <pubDate>Sun, 23 Feb 2020 00:00:00 +0300</pubDate>
+      <guid>7</guid>
+    </item>
+    <item>
+      <title>brainfuck.js</title>
+      <link>https://dimden.dev/blog/?id=6-brainfuck-js</link>
+      <pubDate>Sun, 12 Jan 2020 00:00:00 +0300</pubDate>
+      <guid>6</guid>
+    </item>
+    <item>
+      <title>The migration</title>
+      <link>https://dimden.dev/blog/?id=5-the-migration</link>
+      <pubDate>Fri, 16 Aug 2019 00:00:00 +0300</pubDate>
+      <guid>5</guid>
+    </item>
+    <item>
+      <title>The Puzzle 3 and stuff</title>
+      <link>https://dimden.dev/blog/?id=4-the-puzzle-3-and-stuff</link>
+      <pubDate>Tue, 6 Aug 2019 00:00:00 +0300</pubDate>
+      <guid>4</guid>
+    </item>
+    <item>
+      <title>Multi Line Task∞: Hello World</title>
+      <link>https://dimden.dev/blog/?id=3-multiline-task-hello-world</link>
+      <pubDate>Sat, 25 May 2019 00:00:00 +0300</pubDate>
+      <guid>3</guid>
+    </item>
+    <item>
+      <title>chip8js - my first emulator</title>
+      <link>https://dimden.dev/blog/?id=2-chip8js-my-first-emulator</link>
+      <pubDate>Sun, 12 May 2019 00:00:00 +0300</pubDate>
+      <guid>2</guid>
+    </item>
+    <item>
+      <title>Hello World!</title>
+      <link>https://dimden.dev/blog/?id=1-hello-world</link>
+      <pubDate>Fri, 10 May 2019 00:00:00 +0300</pubDate>
+      <guid>1</guid>
+    </item>
+  </channel>
+</rss>

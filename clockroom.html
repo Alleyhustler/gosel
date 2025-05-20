@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from dimden.dev/clockroom.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 18:32:36 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLOCK ROOM</title>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-137155489-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-137155489-1');
+    </script>
+    <style>
+        body {
+            background-image: url("images/clockbg.gif");
+            background-repeat: repeat;
+            margin: 0;
+            font-family: 'Times New Roman', Times, serif
+        }
+        #clickme {
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 100;
+            position: fixed;
+        }
+        #clickme > span {
+            font-size: 40px;
+            position: fixed;
+            left: 100px;
+            top: 100px;
+            cursor: pointer;
+            color: white;
+        }
+        #text {
+            text-align: center;
+        }
+        .hand {
+            height: 6px;
+            background: #2a2a2a;
+            transform-origin: 100%;
+            transform: rotate(90deg);
+            transition-timing-function: cubic-bezier(0.1, 2.7, 0.58, 1);
+            position: relative;
+            border-bottom-right-radius: 5px;
+            border-top-right-radius: 5px;
+          }
+          
+          .hand.hour-hand {
+            z-index: 3;
+            left: 25%;
+            top: 50%;
+            width: 25%;
+            margin-bottom: -6px;
+          }
+          
+          .hand.min-hand {
+            height: 3px;
+            z-index: 10;
+            width: 35%;
+            left: 15%;
+            top: 50%;
+          }
+          
+          .hand.second-hand {
+            height: 2px;
+            width: 40%;
+            left: 10%;
+            top: 50%;
+          }
+          .clock {
+            background-image: url("images/clock.png");
+            width: 222px;
+            height: 222px;
+          }
+          .clock-text {
+            color: black;
+            text-align: center;
+            display: block;
+            margin-top: -91px;
+            font-size: 18px;
+          }
+          .clock-container {
+            position: absolute;
+          }
+          #mute {
+            color: white;
+            cursor: pointer;
+          }
+    </style>
+</head>
+<body>
+    <span style="display:none">Last time I slept there was this repeating message about the correct intervals of death to synchronize your soul with the integrated processing power of the dreaming computer gods of old. And this isn’t even the first time that it has happened to me that I had a dream about the correct intervals of death. In fact, I’ve been keeping a written record of when it has occurred to me that I dreamed of such a thing, and this dream itself seems to be repeating in exactly the same interval as mentioned in the dream.
+
+So, of course, I’m going to try dying in this specific order to synchronize my soul. If I have a soul, that is. I thought that I sold it off a long time ago, because I didn’t believe in those things, but if I’m having this dream then maybe that’s a sign that I still have it and you can’t actually sell it off at all, so I’m going to do it.</span>
+    <div id="clickme">
+        <span>click me</span>
+    </div>
+    <span id="mute">m</span>
+    <audio src="sounds/clock.mp3" id="bgm" loop></audio>
+    <script>
+        let mutebtn = document.getElementById('mute');
+        mutebtn.onclick = () => {
+            if (bgm.muted) {
+                bgm.muted = false;
+                mutebtn.innerHTML = 'm';
+            } else {
+                bgm.muted = true;
+                mutebtn.innerHTML = 'p';
+            }
+        }
+        let bgm = document.getElementById('bgm');
+        bgm.volume = 0;
+        setTimeout(() => {
+            bgm.play().then(async () => {
+                document.getElementById("clickme").hidden = true;
+                await waitForPerfectSecond();
+                bgm.currentTime = 0;
+                bgm.volume = 1;
+                let didOnce = false;
+                bgm.oncanplay = async () => {
+                    if(didOnce) return;
+                    didOnce = true;
+                    await waitForPerfectSecond();
+                    bgm.currentTime = 0;
+                    bgm.volume = 1;
+                }
+                setInterval(async () => {
+                    await waitForPerfectSecond();
+                    bgm.currentTime = 0;
+                }, 5000);
+            }).catch(e => {
+                document.onclick = async () => {
+                    bgm.play();
+                    document.getElementById("clickme").hidden = true;
+                    document.onclick = null;
+                    await waitForPerfectSecond();
+                    bgm.currentTime = 0;
+                    bgm.volume = 1;
+                    let didOnce = false;
+                    bgm.oncanplay = async () => {
+                        if(didOnce) return;
+                        didOnce = true;
+                        await waitForPerfectSecond();
+                        bgm.currentTime = 0;
+                        bgm.volume = 1;
+                    }
+                    setInterval(async () => {
+                        await waitForPerfectSecond();
+                        bgm.currentTime = 0;
+                    }, 5000);
+                }
+            })
+        });
+        function waitForPerfectSecond() {
+            return new Promise((resolve) => {
+                let now = new Date();
+                let ms = now.getMilliseconds();
+                let wait = 1000 - ms;
+                if(wait <= 4) {
+                    resolve();
+                } else {
+                    setTimeout(() => {
+                        resolve();
+                    }, wait);
+                }
+            })
+        }
+        let dateWithTimeZone = (timeZone, d) => {
+            let date = d ? d : new Date();
+          
+            let utcDate = new Date(date.toLocaleString('en-US'));
+            let tzDate = new Date(date.toLocaleString('en-US', { timeZone: timeZone }));
+            let offset = utcDate.getTime() - tzDate.getTime();
+            date.setTime( date.getTime() - offset);
+          
+            return date;
+        };
+        async function createClock(left, top, rotate, timezone, text) {
+            let container = document.createElement("div");
+            let clock = document.createElement("div");
+            container.className = "clock-container";
+            clock.className = 'clock';
+            container.style.left = left;
+            container.style.top = top;
+            container.style.transform = `rotate(${rotate}deg)`;
+            clock.innerHTML = `
+                <div class="hand hour-hand"></div>
+                <div class="hand min-hand"></div>
+                <div class="hand second-hand"></div>
+            `;
+            const secondHand = clock.querySelector('.second-hand');
+            const minsHand = clock.querySelector('.min-hand');
+            const hourHand = clock.querySelector('.hour-hand');
+
+            function setDate() {
+                const now = dateWithTimeZone(timezone);
+
+                const seconds = now.getSeconds();
+                const secondsDegrees = ((seconds / 60) * 360) + 90;
+                secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+                const mins = now.getMinutes();
+                const minsDegrees = ((mins / 60) * 360) + ((seconds/60)*6) + 90;
+                minsHand.style.transform = `rotate(${minsDegrees}deg)`;
+
+                const hour = now.getHours();
+                const hourDegrees = ((hour / 12) * 360) + ((mins/60)*30) + 90;
+                hourHand.style.transform = `rotate(${hourDegrees}deg)`;
+            }
+            setDate();
+            container.appendChild(clock);
+            let span = document.createElement("span");
+            span.className = "clock-text"
+            span.innerText = text;
+            container.appendChild(span);
+            document.body.append(container);
+            await waitForPerfectSecond();
+            setDate();
+            let int = setInterval(setDate, 1000);
+            setInterval(async () => {
+                clearInterval(int);
+                setDate();
+                await waitForPerfectSecond();
+                int = setInterval(setDate, 1000);
+            });
+        }
+        createClock("100px", "100px", "3", "America/Los_Angeles", "Los Angeles");
+        createClock("400px", "300px", "-6", "America/Sao_Paulo", "Rio");
+        createClock("700px", "150px", "6", "Europe/Kiev", "Kyiv");
+        createClock("1100px", "250px", "-7", "Australia/Perth", "Perth");
+        createClock("1400px", "90px", "5", "Asia/Tokyo", "Tokyo");
+
+        function onVisibilityChange(callback) {
+            var visible = true;
+        
+            if (!callback) {
+                throw new Error('no callback given');
+            }
+        
+            function focused() {
+                if (!visible) {
+                    callback(visible = true);
+                }
+            }
+        
+            function unfocused() {
+                if (visible) {
+                    callback(visible = false);
+                }
+            }
+        
+            // Standards:
+            if ('hidden' in document) {
+                visible = !document.hidden;
+                document.addEventListener('visibilitychange',
+                    function () { (document.hidden ? unfocused : focused)() });
+            }
+            if ('mozHidden' in document) {
+                visible = !document.mozHidden;
+                document.addEventListener('mozvisibilitychange',
+                    function () { (document.mozHidden ? unfocused : focused)() });
+            }
+            if ('webkitHidden' in document) {
+                visible = !document.webkitHidden;
+                document.addEventListener('webkitvisibilitychange',
+                    function () { (document.webkitHidden ? unfocused : focused)() });
+            }
+            if ('msHidden' in document) {
+                visible = !document.msHidden;
+                document.addEventListener('msvisibilitychange',
+                    function () { (document.msHidden ? unfocused : focused)() });
+            }
+            // IE 9 and lower:
+            if ('onfocusin' in document) {
+                document.onfocusin = focused;
+                document.onfocusout = unfocused;
+            }
+            // All others:
+            window.onpageshow = window.onfocus = focused;
+            window.onpagehide = window.onblur = unfocused;
+        };
+        onVisibilityChange(async vis => {
+            if(vis) {
+                await waitForPerfectSecond();
+                bgm.currentTime = 0;
+            }
+        })
+    </script>
+</body>
+
+<!-- Mirrored from dimden.dev/clockroom.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 18:32:37 GMT -->
+</html>

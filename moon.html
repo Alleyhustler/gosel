@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Mirrored from dimden.dev/moon by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 18:29:11 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Widget</title>
+    <style>
+        @font-face {
+            font-family: "Fallbacks";
+            src: local("MS UI Gothic"), url("fonts/MS-UIGothic.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+        body {
+            background: none transparent;
+            margin: 0;
+            overflow: hidden;
+            font-family: "Fallbacks";
+            font-size: 16px;
+            padding: 5px;
+        }
+        @media screen and (max-device-width: 600px) {
+            body {
+                font-size: 12px !important;
+            }
+        }
+        #moon-box {
+            color: white;
+            text-align: center;
+        }
+        #moon {
+            width: 48px;
+            image-rendering: pixelated;
+        }
+        .yellow {
+            color: yellow
+        }
+        #compass {
+            display: inline;
+            margin-left: 5px;
+        }
+        .moon-symbol {
+            position: absolute;
+            cursor: pointer;
+        }
+        #widget-by {
+            margin-top: 5px;
+            display: block;
+            font-size:12px;
+            color:rgb(167, 167, 167);
+            text-decoration: none;
+        }
+        #widget-by:hover {
+            text-decoration: underline;
+        }
+    </style>
+    
+    
+    
+</head>
+<body>
+    <script src="js/moon.js"></script>
+    <input type="hidden" style="display:none;" id="loc" value="42.8333, 12.8333">
+    <div id="moon-box">
+        <a target="_blank" href="https://lune.dimden.dev/"><img src="images/moon/moon4.png" id="moon" style="transform:rotate(-14.25deg)"></a>
+        <a href="https://lune.dimden.dev/moon.mp4" target="_blank" class="yellow" style="float:right;text-decoration: none;">?</a>
+        <a href="moonwidget/index.html" target="_blank" class="yellow" style="float:left;text-decoration: none;margin-right:5px">+ </a>
+        <p style="text-align:left">
+            Phase: <span id="moonphase" class="yellow">Waning Crescent</span>
+            <br>
+            <span title="How many degrees from North" style="cursor:help">Azimuth:</span>  
+            <span title="How many degrees from North" id="azimuth" class="yellow">19°15' </span> 
+            <span id="compass">
+                <strike title="Top = North, Arrow points on Moon" class="moon-symbol yellow" id="moon-compass" style="transform:rotate(-70.7465316542355deg)">⧂</strike>
+            </span>
+            <br>
+            <span title="How many degrees from horizon" style="cursor:help">Altitude:</span>  
+            <span title="How many degrees from horizon" id="altitude" class="yellow">-56°11'</span> 
+            <span id="rising" class="yellow">▴</span>
+            <br>
+            <a target="_blank" href="clockroom.html" id="time-in-ukraine" style="color:white;text-decoration:none">
+                Time in Ukraine: <span id="time" class="yellow">21:27:52</span>
+            </a>
+            <a id="widget-by" style="display:none" href="index.html" target="_blank">
+                widget by dimden.dev
+            </a>
+            <br>
+        </p>
+    </div>
+    <script>
+        let params = new URLSearchParams(window.location.search);
+
+        function dec2deg(decimal) {
+            let dec = Math.abs(decimal);
+            let deg = Math.floor(dec);
+            let min = Math.floor((dec - deg) * 60);
+            let sec = +((dec - deg - (min/60)) * 3600).toFixed(2);
+
+            if (decimal < 0) deg = -deg;
+            let out = "";
+            if(deg !== 0) out += `${deg}°`;
+            else out += `0°`;
+            if(min !== 0) out += `${min}'`.padStart(3, '0');
+            else out += `00'`;
+            return out.trim();
+        };
+        function getLunarPhase() {
+            let year = new Date().getFullYear();
+            let month = new Date().getMonth() + 1;
+            let day = new Date().getDate();
+            let c = e = jd = b = 0;
+            if (month < 3) { year--; month += 12; };
+            ++month;
+            c = 365.25 * year;
+            e = 30.6 * month;
+            jd = c + e + day - 694039.09; //jd is total days elapsed
+            jd /= 29.5305882; //divide by the moon cycle
+            b = parseInt(jd); //int(jd) -> b, take integer part of jd
+            jd -= b; //subtract integer part to leave fractional part of original jd
+            b = Math.round(jd * 16); //scale fraction from 0-8 and round
+            if (b >= 16) b = 0;
+
+            switch(b) {
+                case 0: return [7, "New"];
+                case 1: return [8, "Waxing Crescent"];
+                case 2: return [9, "Waxing Crescent"];
+                case 3: return [10, "Waxing Crescent"];
+                case 4: return [11, "Quarter"];
+                case 5: return [12, "Waxing Gibbous"];
+                case 6: return [13, "Waxing Gibbous"];
+                case 7: return [14, "Waxing Gibbous"];
+                case 8: return [15, "Full"];
+                case 9: return [0, "Waning Gibbous"];
+                case 10: return [1, "Waning Gibbous"];
+                case 11: return [2, "Waning Gibbous"];
+                case 12: return [3, "Last Quarter"];
+                case 13: return [4, "Waning Crescent"];
+                case 14: return [5, "Waning Crescent"];
+                case 15: return [6, "Waning Crescent"];
+                default: return [7, "New"];
+            }
+        }
+
+        let loc = document.getElementById("loc").value.split(", ");
+        let time = document.getElementById("time");
+        let offset = isFinite(parseInt(localStorage.azimuthOffset)) ? parseInt(localStorage.azimuthOffset) : 0;
+        document.getElementById('moon-compass').addEventListener('click', function() {
+            let newOffset = parseInt(prompt(`Current offset is ${offset}. Enter new offset for moon compass (in 0-359 degrees):`));
+            if(isFinite(newOffset)) {
+                if(newOffset >= 0 && newOffset < 360) {
+                    localStorage.azimuthOffset = newOffset;
+                    offset = newOffset;
+                } else {
+                    alert("Invalid offset (must be in 0-359 range)");
+                }
+            }
+        });
+        // update time&moon every second
+        setInterval(() => {
+            let moonPosition = SunCalc.getMoonPosition(new Date(), +loc[0], +loc[1]);
+            let moonPositionFuture = SunCalc.getMoonPosition(new Date(Date.now()+30000), +loc[0], +loc[1]);
+            let rising = (moonPosition.altitude * 180 / Math.PI) < (moonPositionFuture.altitude * 180 / Math.PI);
+            document.getElementById('rising').innerText = rising ? '▴' : '▾';
+            if(!document.getElementById("moon").src.includes(`/images/moon/moon${getLunarPhase()[0]}.png`)) document.getElementById("moon").src = `/images/moon/moon${getLunarPhase()[0]}.png`;
+            document.getElementById("moon").style.transform = `rotate(${(moonPosition.parallacticAngle * 180 / Math.PI).toFixed(2)}deg)`;
+            document.getElementById("moon-compass").style.transform = `rotate(${(-90 + offset + ((moonPosition.azimuth * 180 / Math.PI + 180)) % 360).toFixed(2)}deg)`;
+            document.getElementById("moonphase").innerHTML = getLunarPhase()[1];
+            document.getElementById("azimuth").innerHTML = dec2deg((moonPosition.azimuth * 180 / Math.PI + 180) % 360);
+            document.getElementById("altitude").innerHTML = dec2deg(moonPosition.altitude * 180 / Math.PI);
+            if((moonPosition.altitude * 180 / Math.PI) <= 0) {
+                document.getElementById("altitude").style.color = "gray";
+            } else if((moonPosition.altitude * 180 / Math.PI) <= 10) {
+                document.getElementById("altitude").style.color = "orange";
+            } else {
+                document.getElementById("altitude").style.color = "yellow";
+            }
+            time.innerHTML = new Date().toLocaleTimeString([], {timeZone: 'Europe/Kiev', hour12: false});
+        }, 1000);
+    </script>
+</body>
+
+<!-- Mirrored from dimden.dev/moon by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 20 May 2025 18:29:11 GMT -->
+</html>
